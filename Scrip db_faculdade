@@ -1,0 +1,170 @@
+
+
+
+
+CREATE DATABASE IF NOT EXISTS Faculdade
+DEFAULT CHARSET utf8mb4 
+DEFAULT COLLATE utf8mb4_0900_ai_ci;
+
+USE Faculdade;
+
+
+CREATE TABLE IF NOT EXISTS Departamento(
+cod_departamento INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+Nome_departamento CHAR (20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Professor(
+Cod_professor INTEGER  (4) PRIMARY KEY AUTO_INCREMENT,
+Nome_professor CHAR (20)NOT NULL,
+Sobrenome_professor CHAR (50) NOT NULL,
+Status BOOLEAN,
+fk_cod_departamento INTEGER (4),
+FOREIGN KEY (fk_cod_departamento) REFERENCES Departamento (cod_departamento)
+);
+
+CREATE TABLE IF NOT EXISTS Curso (
+Cod_curso INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+Nome_curso CHAR(20),
+fk_cod_departamento INTEGER (4),
+FOREIGN KEY (fk_cod_departamento) REFERENCES departamento (cod_departamento)
+);
+
+CREATE TABLE IF NOT EXISTS Turma(
+Cod_turma INTEGER (4)PRIMARY KEY AUTO_INCREMENT,
+Periodo CHAR (8),
+Num_alunos INTEGER (4),
+DT_inicio DATE,
+DT_fim DATE ,
+fK_cod_curso INTEGER (4),
+FOREIGN KEY (fk_cod_curso) REFERENCES curso (cod_curso)
+);
+
+CREATE TABLE IF NOT EXISTS Disciplina (
+Cod_discipina INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+Nome_disciplina CHAR (20),
+Carga_horaria INTEGER (4) NOT NULL,
+Descricao CHAR (50),
+Num_alunos INTEGER (4) NOT NULL,
+fk_cod_departamento INTEGER (4)NOT NULL,
+FOREIGN KEY (fk_cod_departamento) REFERENCES  departamento (cod_departamento)
+);
+
+CREATE TABLE IF NOT EXISTS Tipo_telefone(
+cod_tipo INTEGER(4) PRIMARY KEY AUTO_INCREMENT,
+Tipo_telefone CHAR (8)
+);
+
+CREATE TABLE IF NOT EXISTS Telefone(
+cod_telefone INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+num_telefone CHAR (20),
+fk_cod_tipo INTEGER (4),
+FOREIGN KEY (fk_cod_tipo) REFERENCES tipo_telefone(cod_tipo)
+);
+
+CREATE TABLE IF NOT EXISTS tipo_logradouro (
+cod_tipo_logradouro INT(4) PRIMARY KEY AUTO_INCREMENT,
+tipo_logradouro CHAR (11)
+);
+
+CREATE TABLE IF NOT EXISTS Endereco(
+Cod_endereco INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+Nome_rua CHAR (50)NOT NULL,
+Numero_rua INTEGER (4) NOT NULL,
+Complemento CHAR(20) NOT NULL,
+Cep CHAR (8) NOT NULL,
+fk_cod_tipo_logradouro INTEGER (4) NOT NULL,
+FOREIGN KEY (fk_cod_tipo_logradouro) REFERENCES tipo_logradouro (cod_tipo_logradouro)
+);
+
+CREATE TABLE IF NOT EXISTS Aluno(
+RA INT(4) PRIMARY KEY AUTO_INCREMENT,
+Nome_aluno CHAR (20),
+Sobrenome_aluno CHAR (20),
+CPF CHAR (11),
+Status BOOLEAN,
+Sexo CHAR (1),
+Nome_pai CHAR(50),
+Nome_mae CHAR(50),
+Email CHAR(50),
+Whatsapp CHAR (20),
+fk_cod_curso INTEGER(4),
+FK_cod_turma INTEGER (4) ,
+FK_endereço_cod_endereco INTEGER(4),
+FOREIGN KEY (fk_cod_endereco) REFERENCES endereco (cod_endereco),
+FOREIGN KEY (fk_cod_curso) REFERENCES curso (cod_curso),
+FOREIGN KEY (fk_cod_turma) REFERENCES turma (cod_turma)
+);
+
+CREATE TABLE IF NOT EXISTS Telefone_aluno(
+cod_tel_aluno INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+fk_RA INTEGER (4) NOT NULL,
+fk_cod_telefone INTEGER (4) NOT NULL,
+FOREIGN KEY (fk_cod_telefone) REFERENCES telefone (cod_telefone),
+FOREIGN KEY (fk_RA) REFERENCES aluno (RA)
+);
+
+CREATE TABLE IF NOT EXISTS Historico(
+Cod_historico INTEGER (4) PRIMARY KEY AUTO_INCREMENT,
+DT_inicio DATE ,
+DT_final DATE ,
+fk_RA INTEGER (4) NOT NULL,
+FOREIGN KEY (fk_RA) REFERENCES aluno (RA)
+);
+
+CREATE TABLE IF NOT EXISTS professor_disciplina (
+fk_cod_professor INTEGER(4) NOT NULL,
+fk_cod_disciplina INTEGER(4) NOT NULL,
+PRIMARY KEY (fk_cod_professor, fk_cod_disciplina)
+);
+
+CREATE TABLE IF NOT EXISTS curso_disciplina(
+fk_cod_curso INTEGER(4) NOT NULL,
+fk_cod_disciplina INTEGER (4)NOT NULL,
+PRIMARY KEY (fk_cod_curso,fk_cod_disciplina),
+FOREIGN KEY (fk_cod_disciplina) REFERENCES disciplina (cod_disciplina),
+FOREIGN KEY (fk_cod_curso) REFERENCES curso(cod_curso)
+);
+
+CREATE TABLE IF NOT EXISTS disciplina_historico(
+fk_cod_historico INTEGER (4)NOT NULL,
+fk_cod_disciplina INTEGER(4)NOT NULL,
+Nota FLOAT (4,2),
+frequencia INTEGER (4),
+PRIMARY KEY (fk_cod_historico,fk_cod_disciplina),
+FOREIGN KEY (fk_cod_historico) REFERENCES historico (cod_historico),
+FOREIGN KEY (fk_cod_disciplina) REFERENCES disciplina (cod_disciplina)
+);
+
+CREATE TABLE IF NOT EXISTS Aluno_disciplina (
+fk_RA INTEGER (4) NOT NULL,
+fk_cod_disciplina INTEGER  (4)NOT NULL,
+PRIMARY KEY (fk_RA,fk_cod_disciplina),
+FOREIGN KEY(fk_RA) REFERENCES  Aluno(RA),
+FOREIGN KEY (fk_cod_disciplina) REFERENCES disciplina (cod_disciplina)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
